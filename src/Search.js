@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
+import Book from './Book'
 
 class Search extends Component {
 
@@ -14,7 +15,15 @@ class Search extends Component {
     this.setState({ query: value })
 
     BooksAPI.search(value).then((books) => {
-      this.setState({ books })
+      const simplifiedBooks = books.map((book) => {
+        return {
+          id: book.id,
+          title: book.title,
+          authors: book.authors || [],
+          thumbnail: book.imageLinks.thumbnail,
+        }
+      })
+      this.setState({ books: simplifiedBooks || [] })
     })
   }
 
@@ -33,12 +42,17 @@ class Search extends Component {
               value={query}
               onChange={this.handleInputChange}
               placeholder="Search by title or author" />
-
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {books.map((book) => (<li key={book.id}>{book.title}</li>))}
+            {books.map((book) => (
+              <Book
+                key={book.id}
+                title={book.title}
+                authors={book.authors}
+                thumbnail={book.thumbnail} />
+            ))}
           </ol>
         </div>
       </div>
