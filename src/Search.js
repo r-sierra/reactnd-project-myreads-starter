@@ -51,7 +51,8 @@ class Search extends Component {
                 key={book.id}
                 title={book.title}
                 authors={book.authors}
-                thumbnail={book.thumbnail} />
+                thumbnail={book.thumbnail}
+                defaultShelf='none' />
             ))}
           </ol>
         </div>
