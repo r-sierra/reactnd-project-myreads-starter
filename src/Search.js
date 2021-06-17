@@ -14,17 +14,27 @@ class Search extends Component {
     const value = event.target.value
     this.setState({ query: value })
 
-    BooksAPI.search(value).then((books) => {
-      const simplifiedBooks = books.map((book) => {
-        return {
-          id: book.id,
-          title: book.title,
-          authors: book.authors || [],
-          thumbnail: book.imageLinks.thumbnail,
-        }
+    // Prior search results are not shown
+    if (!value || value.trim() === '')
+      this.setState({ books: [] })
+    else
+      // TODO: handle `fetch` aborts to prevent slow connections from showing
+      // results from previous searchs
+      BooksAPI.search(value).then((result) => {
+        // Invalid queries are handled
+        const books = Array.isArray(result) ? result : []
+        const simplifiedBooks = books.map((book) => {
+          return {
+            id: book.id,
+            title: book.title,
+            // The search works correctly when a book does not have a authors
+            authors: book.authors || [],
+            // The search works correctly when a book does not have a thumbnail
+            thumbnail: book.imageLinks ? book.imageLinks.thumbnail : ''
+          }
+        })
+        this.setState({ books: simplifiedBooks})
       })
-      this.setState({ books: simplifiedBooks || [] })
-    })
   }
 
   render() {
