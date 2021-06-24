@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
 class Search extends Component {
+
+  static propTypes = {
+    onShelfChange: PropTypes.func.isRequired
+  }
 
   state = {
     query: '',
@@ -30,7 +35,8 @@ class Search extends Component {
             // The search works correctly when a book does not have a authors
             authors: book.authors || [],
             // The search works correctly when a book does not have a thumbnail
-            thumbnail: book.imageLinks ? book.imageLinks.thumbnail : ''
+            thumbnail: book.imageLinks ? book.imageLinks.thumbnail : '',
+            shelf: book.shelf ? book.shelf : 'none'
           }
         })
         this.setState({ books: simplifiedBooks})
@@ -39,6 +45,7 @@ class Search extends Component {
 
   render() {
     const { query, books } = this.state
+    const { onShelfChange } = this.props
 
     return (
       <div className="search-books">
@@ -57,12 +64,15 @@ class Search extends Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {books.map((book) => (
-              <Book
-                key={book.id}
-                title={book.title}
-                authors={book.authors}
-                thumbnail={book.thumbnail}
-                defaultShelf='none' />
+              <li key={book.id}>
+                <Book
+                  id={book.id}
+                  title={book.title}
+                  authors={book.authors}
+                  thumbnail={book.thumbnail}
+                  defaultShelf={book.shelf}
+                  onShelfChange={onShelfChange} />
+              </li>
             ))}
           </ol>
         </div>

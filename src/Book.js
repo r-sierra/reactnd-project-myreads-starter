@@ -4,10 +4,12 @@ import PropTypes from 'prop-types'
 class Book extends Component {
 
   static propTypes = {
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
     thumbnail: PropTypes.string.isRequired,
     defaultShelf: PropTypes.string.isRequired,
+    onShelfChange: PropTypes.func.isRequired
   }
 
   state = {
@@ -16,7 +18,17 @@ class Book extends Component {
 
   handleOnChange = event => {
     const { value } = event.target
+    const { id, title, authors, thumbnail } = this.props
+
     this.setState({ shelf: value })
+
+    this.props.onShelfChange(value, {
+      id: id,
+      title: title,
+      authors: authors,
+      thumbnail: thumbnail,
+      shelf: value
+    })
   }
 
   render() {

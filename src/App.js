@@ -11,6 +11,15 @@ class BooksApp extends Component {
     books: []
   }
 
+  onShelfChange = (shelf, newBook) => {
+    this.setState(prevState => {
+      const books = prevState.books.filter((book) => (
+        book.id !== newBook.id
+      ))
+      return { books: shelf === 'none' ? books : books.concat([newBook]) }
+    })
+  }
+
   booksForShelf = (shelf) => {
     const { books } = this.state
     return books.filter((book) => (book.shelf === shelf))
@@ -19,7 +28,9 @@ class BooksApp extends Component {
   render() {
     return (
       <div className="app">
-        <Route path='/search' component={Search}/>
+        <Route path='/search' render={() => (
+          <Search onShelfChange={this.onShelfChange} />
+        )}/>
         <Route exact path='/' render={() => (
           <div className="list-books">
             <div className="list-books-title">
@@ -30,17 +41,20 @@ class BooksApp extends Component {
                 <Bookshelf
                   key='currentlyReading'
                   title='Currently Reading'
-                  books={this.booksForShelf('currentlyReading')} />
+                  books={this.booksForShelf('currentlyReading')}
+                  onShelfChange={this.onShelfChange} />
 
                 <Bookshelf
                   key='wantToRead'
                   title='Want to Read'
-                  books={this.booksForShelf('wantToRead')} />
+                  books={this.booksForShelf('wantToRead')}
+                  onShelfChange={this.onShelfChange} />
 
                 <Bookshelf
                   key='read'
                   title='Read'
-                  books={this.booksForShelf('read')} />
+                  books={this.booksForShelf('read')}
+                  onShelfChange={this.onShelfChange} />
               </div>
             </div>
             <Link to='/search' className='open-search'>
