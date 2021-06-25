@@ -12,6 +12,7 @@ class BooksApp extends Component {
   }
 
   onShelfChange = (shelf, newBook) => {
+    newBook.shelf = shelf
     this.setState(prevState => {
       const books = prevState.books.filter((book) => (
         book.id !== newBook.id

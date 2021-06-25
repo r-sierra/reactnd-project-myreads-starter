@@ -28,18 +28,7 @@ class Search extends Component {
       BooksAPI.search(value).then((result) => {
         // Invalid queries are handled
         const books = Array.isArray(result) ? result : []
-        const simplifiedBooks = books.map((book) => {
-          return {
-            id: book.id,
-            title: book.title,
-            // The search works correctly when a book does not have a authors
-            authors: book.authors || [],
-            // The search works correctly when a book does not have a thumbnail
-            thumbnail: book.imageLinks ? book.imageLinks.thumbnail : '',
-            shelf: book.shelf ? book.shelf : 'none'
-          }
-        })
-        this.setState({ books: simplifiedBooks})
+        this.setState({ books })
       })
   }
 
@@ -65,13 +54,7 @@ class Search extends Component {
           <ol className="books-grid">
             {books.map((book) => (
               <li key={book.id}>
-                <Book
-                  id={book.id}
-                  title={book.title}
-                  authors={book.authors}
-                  thumbnail={book.thumbnail}
-                  defaultShelf={book.shelf}
-                  onShelfChange={onShelfChange} />
+                <Book book={book} onShelfChange={onShelfChange} />
               </li>
             ))}
           </ol>
