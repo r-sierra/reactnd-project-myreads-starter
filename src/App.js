@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route, Link } from 'react-router-dom'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import Search from './Search'
 import Bookshelf from './Bookshelf'
 import './App.css'
@@ -9,6 +9,17 @@ class BooksApp extends Component {
 
   state = {
     books: []
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll()
+      .then((books) => {
+        this.setState(() => ({
+          books: books.filter((book) => (
+            book.shelf && book.shelf !== 'none'
+          ))
+        }))
+      })
   }
 
   onShelfChange = (shelf, newBook) => {
