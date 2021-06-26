@@ -1,9 +1,24 @@
 import React, { Component } from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
+import BookList from './BookList'
 import Search from './Search'
-import Bookshelf from './Bookshelf'
 import './App.css'
+
+const shelves = [
+  {
+    name: 'currentlyReading',
+    title: 'Currently Reading'
+  },
+  {
+    name: 'wantToRead',
+    title: 'Want to Read',
+  },
+  {
+    name: 'read',
+    title: 'Read'
+  }
+]
 
 class BooksApp extends Component {
 
@@ -32,48 +47,19 @@ class BooksApp extends Component {
     })
   }
 
-  booksForShelf = (shelf) => {
-    const { books } = this.state
-    return books.filter((book) => (book.shelf === shelf))
-  }
-
   render() {
+    const { books } = this.state
     return (
       <div className="app">
-        <Route path='/search' render={() => (
+        <Route path='/search'>
           <Search onShelfChange={this.onShelfChange} />
-        )}/>
-        <Route exact path='/' render={() => (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <Bookshelf
-                  key='currentlyReading'
-                  title='Currently Reading'
-                  books={this.booksForShelf('currentlyReading')}
-                  onShelfChange={this.onShelfChange} />
-
-                <Bookshelf
-                  key='wantToRead'
-                  title='Want to Read'
-                  books={this.booksForShelf('wantToRead')}
-                  onShelfChange={this.onShelfChange} />
-
-                <Bookshelf
-                  key='read'
-                  title='Read'
-                  books={this.booksForShelf('read')}
-                  onShelfChange={this.onShelfChange} />
-              </div>
-            </div>
-            <Link to='/search' className='open-search'>
-              <button>Add a book</button>
-            </Link>
-          </div>
-        )} />
+        </Route>
+        <Route exact path='/'>
+          <BookList
+            onShelfChange={this.onShelfChange}
+            books={books}
+            shelves={shelves} />
+        </Route>
       </div>
     )
   }
