@@ -7,7 +7,8 @@ import Book from './Book'
 class Search extends Component {
 
   static propTypes = {
-    onShelfChange: PropTypes.func.isRequired
+    onShelfChange: PropTypes.func.isRequired,
+    books: PropTypes.array.isRequired
   }
 
   state = {
@@ -28,6 +29,13 @@ class Search extends Component {
       BooksAPI.search(value).then((result) => {
         // Invalid queries are handled
         const books = Array.isArray(result) ? result : []
+        const currentBooks = this.props.books
+        // Books have the same state that the main page
+        books.forEach((book) => {
+          let index = currentBooks.findIndex((other) => (book.id === other.id))
+          if (index !== -1)
+            book.shelf = currentBooks[index].shelf
+        })
         this.setState({ books })
       })
   }

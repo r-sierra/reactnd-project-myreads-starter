@@ -53,7 +53,9 @@ class BooksApp extends Component {
     return (
       <div className="app">
         <Route path='/search'>
-          <Search onShelfChange={this.onShelfChange} />
+          <Search
+            onShelfChange={this.onShelfChange}
+            books={books} />
         </Route>
         <Route exact path='/'>
           <BookList
