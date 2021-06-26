@@ -52,12 +52,12 @@ class BooksApp extends Component {
     const { books } = this.state
     return (
       <div className="app">
-        <Route path='/search'>
+        <Route path="/search">
           <Search
             onShelfChange={this.onShelfChange}
             books={books} />
         </Route>
-        <Route exact path='/'>
+        <Route exact path="/">
           <BookList
             onShelfChange={this.onShelfChange}
             books={books}

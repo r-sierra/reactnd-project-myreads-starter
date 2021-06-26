@@ -20,7 +20,7 @@ const BookList = (props) => {
         ))}
         </div>
       </div>
-      <Link to='/search' className='open-search'>
+      <Link to="/search" className="open-search">
         <button>Add a book</button>
       </Link>
     </div>
