@@ -45,6 +45,7 @@ class BooksApp extends Component {
       ))
       return { books: shelf === 'none' ? books : books.concat([newBook]) }
     })
+    BooksAPI.update(newBook, shelf)
   }
 
   render() {
