@@ -32,9 +32,8 @@ class Search extends Component {
         const currentBooks = this.props.books
         // Books have the same state that the main page
         books.forEach((book) => {
-          let index = currentBooks.findIndex((other) => (book.id === other.id))
-          if (index !== -1)
-            book.shelf = currentBooks[index].shelf
+          let found = currentBooks.find((other) => (book.id === other.id))
+          book.shelf = found ? found.shelf : 'none'
         })
         this.setState({ books })
       })
