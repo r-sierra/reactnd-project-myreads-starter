@@ -38,14 +38,17 @@ class BooksApp extends Component {
   }
 
   onShelfChange = (shelf, newBook) => {
-    newBook.shelf = shelf
-    this.setState(prevState => {
-      const books = prevState.books.filter((book) => (
-        book.id !== newBook.id
-      ))
-      return { books: shelf === 'none' ? books : books.concat([newBook]) }
-    })
+    // Update local state only if the API call get resolved
     BooksAPI.update(newBook, shelf)
+      .then(() => {
+        newBook.shelf = shelf
+        this.setState(prevState => {
+          const books = prevState.books.filter((book) => (
+            book.id !== newBook.id
+          ))
+          return { books: shelf === 'none' ? books : books.concat([newBook]) }
+        })
+      })
   }
 
   render() {
