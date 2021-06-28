@@ -4,6 +4,20 @@ import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
+/**
+ * Debounce definition
+ * Url: https://dev.to/jivkojelev91/comment/lpi6
+ */
+const debounce = (func, delay) => {
+  let debounceTimer
+  return (...args) => {
+    clearTimeout(debounceTimer);
+    const context = this
+    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  }
+}
+
+
 class Search extends Component {
 
   static propTypes = {
@@ -24,20 +38,24 @@ class Search extends Component {
     if (!value || value.trim() === '')
       this.setState({ books: [] })
     else
-      // TODO: handle `fetch` aborts to prevent slow connections from showing
-      // results from previous searchs
-      BooksAPI.search(value).then((result) => {
-        // Invalid queries are handled
-        const books = Array.isArray(result) ? result : []
-        const currentBooks = this.props.books
-        // Books have the same state that the main page
-        books.forEach((book) => {
-          let found = currentBooks.find((other) => (book.id === other.id))
-          book.shelf = found ? found.shelf : 'none'
-        })
-        this.setState({ books })
-      })
+      this.search(value)
   }
+
+  search = debounce(value => {
+    // TODO: handle `fetch` aborts to prevent slow connections from showing
+    // results from previous searchs
+    BooksAPI.search(value).then((result) => {
+      // Invalid queries are handled
+      const books = Array.isArray(result) ? result : []
+      const currentBooks = this.props.books
+      // Books have the same state that the main page
+      books.forEach((book) => {
+        let found = currentBooks.find((other) => (book.id === other.id))
+        book.shelf = found ? found.shelf : 'none'
+      })
+      this.setState({ books })
+    })
+  }, 300)
 
   render() {
     const { query, books } = this.state
